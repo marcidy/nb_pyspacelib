@@ -1,72 +1,103 @@
 from dmx import set_dmx, blackout
+from requests import post
+from colorsys import hsv_to_rgb
+
+BASE = "http://10.20.1.25:9090/set_dmx"
 
 
-class rgb_can():
+class dmxEndPoint:
 
     def __init__(self, id, channels):
-        self.channels = channels  # {obj, address} e.g. {red, 61}
+        self.channels = channels  # {obj, addr}
+        addrs = channels.values()
+        self.len = max(addrs) - min(addrs) + 1
         self.id = id
-        self.lights = self.make_lights()
+        self.values = [0]*self.len
 
-    def make_lights(self):
-        return {addr: 0 for _, addr in self.channels.items()}
+    def __len__(self):
+        return self.len
 
     def _set_obj_value(self, obj, value):
         if obj in self.channels:
             addr = self.channels[obj]
-            self.lights[addr] = value
-            return True
-        else:
-            return False
+            self.values[addr] = value
 
-    def _get_obj_power(self, obj):
+    def _get_obj_value(self, obj):
         if obj in self.channels:
-            return self.channels[obj]
+            addr = self.channels[obj]
+            return self.values[addr]
 
-    def set_power(self, val):
-        self._set_obj_power('power', val)
+    def show(self):
+        return self.values
 
-    def get_power(self):
-        return self._get_obj_power('power')
 
-    power = property(get_power, set_power)
+class rgbCan(dmxEndPoint):
 
-    def set_value(self, val):
-        self._set_obj_value('value', val)
+    def set_hsv(self, h, s, v):
+        r, g, b = colorsys.hsv_to_rgb(h, s, v)
+        self.set_rgb(r*255, g*255, b*255)
 
-    def get_value(self):
-        return self._get_obj_value('value')
+    def set_rgb(self, r=0, g=0, b=0, w=0):
+        self._set_obj_value('red', r)
+        self._set_obj_value('green', g)
+        self._set_obj_value('blue', b)
+        self._set_obj_value('white', w)
 
-    value = property(get_value, set_value)
+    def on(self):
+        self._set_obj_value('power', 255)
 
-    def set_red(self, val):
-        self._set_obj_value('red', val)
+    def off(self):
+        self._set_obj_value('power', 0)
 
-    def get_red(self):
-        return self._get_obj_value('red')
+    def mode(self, mode):
+        if mode == "solid":
+            self._set_obj_value('selection', 50)
+        elif mode == "change":
+            self._set_obj_value("selection", 60)
+        elif mode == "jump":
+            self._set_obj_value("selection", 125)
+        elif mode == "gradient":
+            self._set_obj_value("selection", 175)
+        elif mode == "pulse":
+            self._set_obj_value("selection", 225)
+        elif mode == "sound":
+            self._set_obj_value("selection", 275)
 
-    red = property(get_red, set_red)
+    def speed(self, value):
+        self._set_obj_value("speed", value)
 
-    def set_green(self, val):
-        self._set_obj_value('green', val)
+    def strobe(self, speed):
+        self._set_obj_value('strobe', speed)
 
-    def get_green(self):
-        return self._get_obj_value('green')
+    def set(self, object, value):
+        self._set_obj_value(object, value)
 
-    green = property(get_green, set_green)
 
-    def set_blue(self, val):
-        self._set_obj_value('blue', val)
+class dmxUniverse:
 
-    def get_blue(self):
-        return self._get_obj_value('blue')
+    def __init__(self, id):
+        self.id = id
+        self.fixtures = {}
+        self.values = 512*[0]
 
-    blue = property(get_blue, set_blue)
+    def add_fixture(self, fixture):
+        ''' Overwrites what was there, period '''
+        self.fixtures[fixture.id] = fixture
 
-    def set_pattern(self, val):
-        self._set_obj_value('pattern', val)
+    def push(self, operation, value):
+        for fixture in self.fixtures.values():
+            fixture.set(operation, value)
 
-    def get_pattern(self):
-        return self._get_obj_value('pattern')
+    def show(self):
+        for id, fixture in self.fixtures.items():
+            values = fixture.show()
+            for val in range(len(values)):
+                self.values[id + val-1] = values[val]
 
-    pattern = property(get_pattern, set_pattern)
+        data = {"u": str(self.id), "d": ",".join(map(str, self.values))}
+        print(self.values[49:57])
+        post(BASE, data=data)
+
+
+class rgbSpot(dmxEndPoint):
+    pass
