@@ -26,21 +26,27 @@ class FTImage:
                            height)
             self.pixelated = dest_path
 
+    def load_image(self, img_path):
+        name = img_path.split('/')[-1]
+        self.dest_path = os.path.join(self.dest_dir, "ft-" + name)
+        self.image = FTImage(img_path, dest_path)
+        self.image.pixelate(dest_path,
+                            self.client.width,
+                            self.client.height)
+        self.image.load_pixels()
+
+
+class BitMap(FTImage):
+
+    def load_pixels(self, bg=(0, 0, 0), fg=(1, 1, 1)):
+        img = 1
+
 
 class FTController:
 
     def __init__(self, dest_dir):
         self.client = ftclient()
         self.dest_dir = dest_dir
-
-    def load_image(self, img_path):
-        name = img_path.split('/')[-1]
-        dest_path = os.path.join(self.dest_dir, "ft-" + name)
-        self.image = FTImage(img_path, dest_path)
-        self.image.pixelate(dest_path,
-                            self.client.width,
-                            self.client.height)
-        self.image.load_pixels()
 
     def pad(self):
         self.x_pad = self.client.width - self.image.width
@@ -51,9 +57,8 @@ class FTController:
         self.l_pad = int(self.x_pad/2)
         self.r_pad = self.x_pad - self.l_pad
 
-    def fill_buffer(self):
+    def fill_buffer(self, pixels):
         self.pad()
-        pixels = self.image.pixels
         self.grid = []
 
         for row in range(self.client.height):
@@ -79,7 +84,7 @@ class FTController:
                         self.client.set(col, row, pixels[col-self.l_pad,
                                                          row-self.b_pad])
                     except IndexError:
-                        msg = "row: {}, height: {} - col: {}, width: {}".format(row - self.t_pad, self.image.height, col - self.y_pad, self.image.width)  #NOQA
+                        msg = "row: {}, height: {} - col: {}, width: {}".format(row - self.t_pad, self.image.height, col - self.y_pad, self.image.width)  # NOQA
                         raise IndexError(msg)
 
                     line.append(pixels[col-self.l_pad, row-self.b_pad])
