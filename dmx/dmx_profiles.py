@@ -32,18 +32,18 @@ DISCO = {'left': 97,
          'right': 113
          }
 
-RGB_OPS = {"power": 0,
-           "red": 1,
-           "green": 2,
-           "blue": 3,
-           "white": 4,
-           "selection": 5,
-           "speed": 6,
-           "strobe": 7}
+RGB_CAN_PROFILE = {"power": 0,
+                   "red": 1,
+                   "green": 2,
+                   "blue": 3,
+                   "white": 4,
+                   "selection": 5,
+                   "speed": 6,
+                   "strobe": 7}
 
-RGB_SPOT_OPS = {"power": 0,
-                "red": 1,
-                "green": 2,
-                "blue": 3,
-                "strobe": 4
-                }
+RGB_SPOT_PROFILE = {"power": 0,
+                    "red": 1,
+                    "green": 2,
+                    "blue": 3,
+                    "strobe": 4
+                    }
