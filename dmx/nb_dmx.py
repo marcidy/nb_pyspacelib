@@ -1,4 +1,3 @@
-from dmx import set_dmx, blackout
 from requests import post
 from colorsys import hsv_to_rgb
 
@@ -34,8 +33,8 @@ class dmxEndPoint:
 class rgbCan(dmxEndPoint):
 
     def set_hsv(self, h, s, v):
-        r, g, b = colorsys.hsv_to_rgb(h, s, v)
-        self.set_rgb(r*255, g*255, b*255)
+        r, g, b = hsv_to_rgb(h/256, s/256, v/256)
+        self.set_rgb(int(r*256), int(g*256), int(b*256))
 
     def set_rgb(self, r=0, g=0, b=0, w=0):
         self._set_obj_value('red', r)
@@ -87,6 +86,11 @@ class dmxUniverse:
     def push(self, operation, value):
         for fixture in self.fixtures.values():
             fixture.set(operation, value)
+
+    def blackout(self):
+        for fixture in self.fixtures.values():
+            fixture.off()
+        self.show()
 
     def show(self):
         for id, fixture in self.fixtures.items():
