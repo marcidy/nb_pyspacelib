@@ -9,23 +9,28 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import Color, Ellipse
 from functools import partial
-from ft_controller import FTController
+from ft_controller import (
+    FTController,
+    FTImage,
+)
 import pudb
 
 
-class FlaschenTaschenCanvasApp(App):
+class FlaschenTaschen(App):
 
-    ftc = FTController('.')
+    ftc = FTController()
     ft = ftdevice("ft", "ft.noise", 1337, 45, 35)
 
     def add_bottles(self, label, wid, width, height, *largs):
-        self.ftc.load_image("test.png")
-        self.ftc.fill_buffer()
+        self.fti = FTImage("./test.png", "./")
+        self.fti.pixelate(self.ft.width, self.ft.height)
+        self.ftc.fill_buffer(self.fti)
+        grid = self.ftc.grid
 
         with wid.canvas:
             for y in range(width):
                 for x in range(height):
-                    r, g, b = self.ftc.grid[height-(x+1)][y]
+                    r, g, b = grid[height-(x+1)][y]
                     Color(r/255, g/255, b/255)
                     Ellipse(pos=(y*20, x*20), size=(20, 20))
 
@@ -69,4 +74,4 @@ class FlaschenTaschenCanvasApp(App):
 
 
 if __name__ == "__main__":
-    FlaschenTaschenCanvasApp().run()
+    FlaschenTaschen().run()

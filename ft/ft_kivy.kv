@@ -1,0 +1,19 @@
+#:kivy 1.0
+
+<FlaschenTaschenViewer>:
+    orientation: 'vertical'
+    Widget:
+        id: ft
+    BoxLayout:
+        canvas:
+        size_hint: 1, None
+        height: 50
+        Button:
+            text: "Reset"
+            on_press: root.reset(ft)
+        Button:
+            text: "Import"
+            on_press: root.add_bottles(ft)
+        Button:
+            on_press: root.show()
+            text: "Send to Flaschen Taschen"
