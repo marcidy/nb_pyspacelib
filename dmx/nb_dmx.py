@@ -92,6 +92,10 @@ class dmxUniverse:
             fixture.off()
         self.show()
 
+    def all_on(self):
+        for fix in self.fixtures.values():
+            fix.on()
+
     def show(self):
         for id, fixture in self.fixtures.items():
             values = fixture.show()
@@ -99,7 +103,6 @@ class dmxUniverse:
                 self.values[id + val-1] = values[val]
 
         data = {"u": str(self.id), "d": ",".join(map(str, self.values))}
-        print(self.values[49:57])
         post(BASE, data=data)
 
 
