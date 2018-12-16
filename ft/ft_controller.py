@@ -5,35 +5,24 @@ import os
 
 
 class FTImage:
-    pixelated = None
 
     def __init__(self, img_path, dest_path):
         self.img_path = img_path
-        self.dest_path = dest_path
+        self.name = img_path.split('/')[-1]
+        self.dest_path = os.path.join(dest_path, "ft-" + self.name)
 
-    def load_pixels(self):
-        img = Image.open(self.pixelated)
-        self.pixels = img.load()
-        self.height = img.height
-        self.width = img.width
-
-    def pixelate(self, dest_path, width, height):
+    def pixelate(self, width, height):
         if self.img_path is not None:
 
             ret = pixelate(self.img_path,
-                           dest_path,
+                           self.dest_path,
                            width,
                            height)
-            self.pixelated = dest_path
 
-    def load_image(self, img_path):
-        name = img_path.split('/')[-1]
-        self.dest_path = os.path.join(self.dest_dir, "ft-" + name)
-        self.image = FTImage(img_path, dest_path)
-        self.image.pixelate(dest_path,
-                            self.client.width,
-                            self.client.height)
-        self.image.load_pixels()
+        img = Image.open(self.dest_path)
+        self.pixels = img.load()
+        self.height = img.height
+        self.width = img.width
 
 
 class BitMap(FTImage):
@@ -44,9 +33,8 @@ class BitMap(FTImage):
 
 class FTController:
 
-    def __init__(self, dest_dir):
+    def __init__(self):
         self.client = ftclient()
-        self.dest_dir = dest_dir
 
     def pad(self):
         self.x_pad = self.client.width - self.image.width
@@ -57,7 +45,9 @@ class FTController:
         self.l_pad = int(self.x_pad/2)
         self.r_pad = self.x_pad - self.l_pad
 
-    def fill_buffer(self, pixels):
+    def fill_buffer(self, image):
+        self.image = image
+        pixels = self.image.pixels
         self.pad()
         self.grid = []
 
