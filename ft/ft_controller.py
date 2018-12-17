@@ -60,8 +60,8 @@ class FTController:
                     col < self.l_pad or
                     col >= (self.client.width - self.r_pad)
                 ):
-                    line.append((0, 0, 0))
-                    self.client.set(col, row, (0, 0, 0))
+                    line.append((1, 1, 1))
+                    self.client.set(col, row, (1, 1, 1))
                 else:
                     if (
                         col - self.l_pad >= self.image.width or

@@ -26,12 +26,15 @@ class FlaschenTaschen(App):
         self.fti.pixelate(self.ft.width, self.ft.height)
         self.ftc.fill_buffer(self.fti)
         grid = self.ftc.grid
+        min_val = 5  # used to work-around layering
 
         with wid.canvas:
             for y in range(width):
                 for x in range(height):
                     r, g, b = grid[height-(x+1)][y]
-                    Color(r/255, g/255, b/255)
+                    Color(max(r, min_val)/255,
+                          max(g, min_val)/255,
+                          max(b, min_val)/255)
                     Ellipse(pos=(y*20, x*20), size=(20, 20))
 
     def reset(self, label, wid, *largs):
