@@ -45,5 +45,6 @@ RGB_SPOT_PROFILE = {"power": 0,
                     "red": 1,
                     "green": 2,
                     "blue": 3,
-                    "strobe": 4
+                    "white": 4,
+                    "mode": 5
                     }
