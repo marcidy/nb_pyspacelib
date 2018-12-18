@@ -9,16 +9,22 @@ from time import sleep
 from colorsys import hsv_to_rgb
 
 
-def wave(ftc, color):
+def wave(ftc, color, phase=0):
     w = ftc.width
     h = ftc.height
+    r, g, b = color
+    _norm = sqrt(w**2 + h**2)
 
     for x in range(w):
         for y in range(h):
-            r = sqrt((x-w/2)*(x-w/2) + (y-h/2)*(y-h/2))/sqrt(w**2 + h**2)
-            intnsty = max(int(255*sin(r * pi/180)), 1)
-            ftc.set(x, y, (intnsty, 0, intnsty))
+            _x2 = (x-w/2)*(x-w/2)
+            _y2 = (y-h/2)*(y-h/2)
+            _r = sqrt(_x2 + _y2)
+            intnsty = sin(32 * _r * pi/180 + ((phase * pi/280) % 360))
 
+            ftc.set(x, y, (max(int(r*intnsty), 1),
+                           max(int(g*intnsty), 1),
+                           max(int(b*intnsty), 1)))
     ftc.show()
 
 

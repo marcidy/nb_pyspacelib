@@ -1,19 +1,19 @@
+from functools import partial
 from ft import (
     ftclient,
     ftdevice
 )
-from kivy.app import App
-from kivy.uix.button import Button
-from kivy.uix.widget import Widget
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.graphics import Color, Ellipse
-from functools import partial
 from ft_controller import (
     FTController,
     FTImage,
 )
-import pudb
+from kivy.app import App
+from kivy.graphics import Color, Ellipse
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.widget import Widget
 
 
 class FlaschenTaschenViewer(BoxLayout):
@@ -55,42 +55,7 @@ class FlaschenTaschenApp(App):
         return FlaschenTaschenViewer()
 
 
-#    def build(self):
-#        wid = Widget()
-#        label = Label(text="0")
-#
-#        btn_add100 = Button(
-#            text='build FT', on_press=partial(
-#                self.add_bottles, label, wid, self.ft.width, self.ft.height))
-#
-#        btn_reset = Button(text="Reset",
-#                           on_press=partial(self.reset, label, wid))
-#
-#        btn_push = Button(
-#            text="Show on FT",
-#            on_press=partial(
-#                self.show,
-#                label,
-#                wid)
-#        )
-#
-#        layout = BoxLayout(size_hint=(1, None), height=50)
-#        layout.add_widget(btn_add100)
-#        layout.add_widget(btn_reset)
-#        layout.add_widget(btn_push)
-#        layout.add_widget(label)
-#
-#        root = BoxLayout(orientation='vertical')
-#        root.add_widget(wid)
-#        root.add_widget(layout)
-#
-#        return root
-
-
 if __name__ in ("__main__", "__android__"):
-    from kivy.app import App
-    from kivy.lang import Builder
-    from kivy.config import Config
 
     app = FlaschenTaschenApp()
     app.run()
