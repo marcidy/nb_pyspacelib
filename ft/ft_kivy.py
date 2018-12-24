@@ -11,9 +11,6 @@ from kivy.app import App
 from kivy.graphics import Color, Ellipse
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.widget import Widget
 
 
 class FlaschenTaschenViewer(BoxLayout):

@@ -1,7 +1,9 @@
-from requests import post
+from requests import post, get
 from colorsys import hsv_to_rgb
+import json
 
-BASE = "http://10.20.1.25:9090/set_dmx"
+SET = "http://10.20.1.25:9090/set_dmx"
+GET = "http://10.20.1.25:9090/get_dmx?u=1"
 
 
 class dmxEndPoint:
@@ -77,11 +79,12 @@ class dmxUniverse:
     def __init__(self, id):
         self.id = id
         self.fixtures = {}
-        self.values = 512*[0]
+        self.get_values()
 
     def add_fixture(self, fixture):
         ''' Overwrites what was there, period '''
         self.fixtures[fixture.id] = fixture
+        self.set_fixture_values(fixture)
 
     def push(self, operation, value):
         for fixture in self.fixtures.values():
@@ -96,6 +99,16 @@ class dmxUniverse:
         for fix in self.fixtures.values():
             fix.on()
 
+    def get_values(self):
+        resp = get(GET)
+        self.values = json.loads(resp.content.decode())['dmx']
+
+    def set_fixture_values(self, fixture):
+        id = fixture.id
+        values = len(fixture)
+        for val in range(values):
+            fixture.values = self.values[id-1:id-1+values]
+
     def show(self):
         for id, fixture in self.fixtures.items():
             values = fixture.show()
@@ -103,7 +116,7 @@ class dmxUniverse:
                 self.values[id + val-1] = values[val]
 
         data = {"u": str(self.id), "d": ",".join(map(str, self.values))}
-        post(BASE, data=data)
+        post(SET, data=data)
 
 
 class rgbSpot(rgbCan):
