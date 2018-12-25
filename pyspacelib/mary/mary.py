@@ -1,26 +1,28 @@
+import requests
 from httpish import GET200, POST200, GET
 import re
 
 BASE = "http://pegasus.noise"
 
+
 def mute():
-    return GET200(BASE+"/mute/")
+    return request.get(BASE+"/mute/")
 
 
 def unmute():
-    return GET200(BASE+"/unmute/")
+    return request.get(BASE+"/unmute/")
 
 
 def say(text):
-    return POST200(BASE+"/say/", {'txt': text})
+    return requests.post(BASE+"/say/", data={'txt': text})
 
 
 def setLanguage(code):
-    return POST200(BASE+"/lang/", {'lang': code})
+    return requests.post(BASE+"/lang/", data={'lang': code})
 
 
 def getLanguage():
-    c = GET(BASE+"/lang/")
+    c = request.get(BASE+"/lang/")
     c.expect200()
     c.recvuntil("selected>")
     lang = c.recvuntil("<")[0:-1].strip()
@@ -30,7 +32,7 @@ def getLanguage():
 
 
 def getLanguages():
-    c = GET(BASE+"/lang/")
+    c = requests.get(BASE+"/lang/")
     c.expect200()
     c.recvuntil('<select name="lang">')
     options = c.recvuntil("</select>").strip()

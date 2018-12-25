@@ -61,7 +61,7 @@ class ftclient:
     def set(self, x, y, color):
         (r, g, b) = color
         if r == 0 and g == 0 and b == 0 and not self.transparent:
-            b = 1
+            b = 3  # Needs to be more than 1 for dithering
         if r not in range(0, 256):
             raise ValueError("Red value not in [0,255]")
         if g not in range(0, 256):
@@ -79,6 +79,7 @@ class ftclient:
         if self.s is None:
             self.get_socket()
         self.s.sendall(self.buf)
+
 
 if __name__ == "__main__":
     f = ftclient()

@@ -1,9 +1,6 @@
 from functools import partial
-from ft import (
-    ftclient,
-    ftdevice
-)
-from ft_controller import (
+from pyspacelib.ft import flaschen_taschen as ft
+from pyspacelib.ft.ft_controller import (
     FTController,
     FTImage,
 )
@@ -16,15 +13,15 @@ from kivy.uix.boxlayout import BoxLayout
 class FlaschenTaschenViewer(BoxLayout):
 
     ftc = FTController()
-    ft = ftdevice("ft", "ft.noise", 1337, 45, 35)
+    # ft = ftdevice("ft", "ft.noise", 1337, 45, 35)
 
     def add_bottles(self, wid):
         self.fti = FTImage("./test.png", "./")
-        self.fti.pixelate(self.ft.width, self.ft.height)
+        self.fti.pixelate(ft.width, ft.height)
         self.ftc.fill_buffer(self.fti)
 
-        height = self.ft.height
-        width = self.ft.width
+        height = ft.height
+        width = ft.width
         grid = self.ftc.grid
 
         with wid.canvas:

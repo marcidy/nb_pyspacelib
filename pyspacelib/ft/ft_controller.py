@@ -1,7 +1,7 @@
-from ft import ftclient
-from PIL import Image
-from image_helpers import pixelate
 import os
+from PIL import Image
+from pyspacelib.ft.ft import ftclient
+from pyspacelib.ft.image_helpers import pixelate
 
 
 class FTImage:
@@ -23,12 +23,6 @@ class FTImage:
         self.pixels = img.load()
         self.height = img.height
         self.width = img.width
-
-
-class BitMap(FTImage):
-
-    def load_pixels(self, bg=(0, 0, 0), fg=(1, 1, 1)):
-        img = 1
 
 
 class FTController:

@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: pyspacelib
+Version: 0.1
+Summary: Python lib for interacting with physical Noisebridge
+Home-page: http://github.com/marcidy/nb_pyspacelib
+Author: Matthew Arcidy
+Author-email: marcidy@gmail.com
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN

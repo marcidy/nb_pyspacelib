@@ -1,0 +1,3 @@
+include pyspacelib/mary
+graft pyspacelib/ft
+global-exclude *.pyc

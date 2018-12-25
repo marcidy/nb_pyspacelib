@@ -1,11 +1,9 @@
 #!/usr/bin/python3
 
-from ft import ftclient
+from pyspacelib.ft import flaschen_taschen as ft
 
-ftc = ftclient(transparent=False)
+for y in range(ft.height):
+    for x in range(ft.width):
+        ft.set(x, y, (5, 5, 5))
 
-for y in range(ftc.height):
-    for x in range(ftc.width):
-        ftc.set(x, y, (0, 0, 1))
-
-ftc.show()
+ft.show()

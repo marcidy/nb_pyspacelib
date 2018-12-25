@@ -1,4 +1,5 @@
-from ft.ft import ftclient
+#!/usr/bin/python3
+from pyspacelib.ft import flaschen_taschen as ftc
 from math import (
     sin,
     pi,
@@ -7,9 +8,6 @@ from math import (
 )
 from time import sleep
 from colorsys import hsv_to_rgb
-
-
-ftc = ftclient()
 
 
 def wave(color, phase=0, freq=0):
@@ -31,30 +29,16 @@ def wave(color, phase=0, freq=0):
     ftc.show()
 
 
-def wave_test():
-    w = ftc.width
-    h = ftc.height
-
-    for phase in range(2000):
-        for x in range(w):
-            for y in range(h):
-                _x = ((x-w/2)*2)**2
-                _y = ((y-h/2)*2)**2
-                _r = sqrt(_x + _y)
-                _int = sin(32 * _r * pi/180 + (phase % 360)/360 * pi)
-                _thta = atan((x - w/2)/(y - h/2)) * phase/1000
-                _h = abs(_thta)
-                r, g, b = hsv_to_rgb(_h, .75, max(_int, 1/255))
-                ftc.set(x, y, (int(r*255), int(g*255), int(b*255)))
-        ftc.show()
-
-
 if __name__ == "__main__":
     phase = 0
     speed = 0
     t = 0
+    x = 0
 
     while True:
-        wave((255, 0, 255), phase, 48)
-        phase = 360*sin(t*pi/180)
-        t += 1
+        wave((255, 0, 255), phase, speed)
+        factor = sin(x/10*pi/180)
+        t = t + 1
+        x = (t - t % 100)/100
+        phase += 15
+        speed = 1000 * factor
