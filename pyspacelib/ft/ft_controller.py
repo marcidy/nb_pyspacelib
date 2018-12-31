@@ -27,22 +27,26 @@ class FTImage:
 
 class FTController:
 
+    min_pixel_val = 5
+
     def __init__(self):
         self.client = ftclient()
 
-    def pad(self):
-        self.x_pad = self.client.width - self.image.width
-        self.y_pad = self.client.height - self.image.height
+    def pad(self, image_width, image_height):
+        self.x_pad = self.client.width - image_width
+        self.y_pad = self.client.height - image_height
 
         self.t_pad = int(self.y_pad/2)
         self.b_pad = self.y_pad - self.t_pad
         self.l_pad = int(self.x_pad/2)
         self.r_pad = self.x_pad - self.l_pad
 
-    def fill_buffer(self, image):
-        self.image = image
-        pixels = self.image.pixels
-        self.pad()
+    def fill_buffer(self, ft_image):
+        # self.image = image
+        pixels = ft_image.pixels
+        image_width = ft_image.width
+        image_height = ft_image.height
+        self.pad(image_width, image_height)
         self.grid = []
 
         for row in range(self.client.height):
@@ -54,12 +58,16 @@ class FTController:
                     col < self.l_pad or
                     col >= (self.client.width - self.r_pad)
                 ):
-                    line.append((1, 1, 1))
-                    self.client.set(col, row, (1, 1, 1))
+                    line.append((self.min_pixel_val,
+                                 self.min_pixel_val,
+                                 self.min_pixel_val))
+                    self.client.set(col, row, (self.min_pixel_val,
+                                               self.min_pixel_val,
+                                               self.min_pixel_val))
                 else:
                     if (
-                        col - self.l_pad >= self.image.width or
-                        row - self.t_pad >= self.image.height
+                        col - self.l_pad >= image_width or
+                        row - self.t_pad >= image_height
                     ):
                         msg = "Row: {}  -  Col: {}".format(row, col)
                         raise ValueError(msg)
